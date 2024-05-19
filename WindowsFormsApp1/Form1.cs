@@ -28,6 +28,8 @@ namespace WindowsFormsApp1
             if (result)
             {
                 MessageBox.Show("СМС усшепно отпралена!");
+                Form2 newForm = new Form2();
+                newForm.Show();
             }
             else
             {
@@ -119,6 +121,16 @@ namespace WindowsFormsApp1
             }
 
             return false;
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
