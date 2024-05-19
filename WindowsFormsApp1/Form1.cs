@@ -18,24 +18,11 @@ namespace WindowsFormsApp1
             InitializeComponent();
         }
 
-        private async void button1_Click(object sender, EventArgs e)
+        public Form1 (Form2 form2)
         {
-            var ip = "192.168.8.1"; // IP 
-            var phone = "+79113172105"; // Номер телефона
-            var msg = "Я не знаю"; // Сообщение 
-
-            var result = await SendSMSAsync(ip, phone, msg);
-            if (result)
-            {
-                MessageBox.Show("СМС усшепно отпралена!");
-                Form2 newForm = new Form2();
-                newForm.Show();
-            }
-            else
-            {
-                MessageBox.Show("Ошибка при отправлении.");
-            }
+            InitializeComponent();
         }
+        
 
         private async Task<bool> SendSMSAsync(string ip, string phone, string msg)
         {
@@ -58,6 +45,16 @@ namespace WindowsFormsApp1
 
             return false;
         }
+        
+        private string GenerateCode()
+        {
+            Random random = new Random();
+
+            var randomNumber = random.Next(1000, 10000);
+
+            return randomNumber.ToString();
+        }
+
 
         private async Task<Cookie> GetInitialCookieAsync(string ip)
         {
@@ -131,6 +128,25 @@ namespace WindowsFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
             throw new System.NotImplementedException();
+        }
+        
+        private async void button1_Click_1(object sender, EventArgs e)
+        {
+            var ip = "192.168.8.1"; // IP 
+            var phone = "+79113172105"; // Номер телефона
+            var msg = "Я не знаю"; // Сообщение 
+
+            var result = await SendSMSAsync(ip, phone, msg);
+            if (result)
+            {
+                MessageBox.Show("СМС усшепно отпралена!");
+                Form2 newForm = new Form2();
+                newForm.Show();
+            }
+            else
+            {
+                MessageBox.Show("Ошибка при отправлении.");
+            }
         }
     }
 }
