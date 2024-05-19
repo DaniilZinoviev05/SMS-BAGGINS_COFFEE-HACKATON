@@ -23,6 +23,31 @@ namespace WindowsFormsApp1
             InitializeComponent();
         }
         
+        public string generatedCode 
+        { 
+            get 
+            {
+                return generatedCode;
+            } 
+
+            private set 
+            {
+                generatedCode = value; 
+            } 
+        }
+
+        public string inputCode
+        {
+            get
+            {
+                return inputCode;
+            }
+
+            private set
+            {
+                inputCode = value;
+            }
+        }
 
         private async Task<bool> SendSMSAsync(string ip, string phone, string msg)
         {
@@ -53,6 +78,19 @@ namespace WindowsFormsApp1
             var randomNumber = random.Next(1000, 10000);
 
             return randomNumber.ToString();
+        }
+
+        private bool ApproveCode()
+        {
+
+            if (generatedCode == inputCode)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
 
@@ -120,21 +158,13 @@ namespace WindowsFormsApp1
             return false;
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
         
         private async void button1_Click_1(object sender, EventArgs e)
         {
             var ip = "192.168.8.1"; // IP 
             var phone = "+79113172105"; // Номер телефона
-            var msg = "Я не знаю"; // Сообщение 
+            var msg = GenerateCode(); // Сообщение 
+            generatedCode = msg;
 
             var result = await SendSMSAsync(ip, phone, msg);
             if (result)
