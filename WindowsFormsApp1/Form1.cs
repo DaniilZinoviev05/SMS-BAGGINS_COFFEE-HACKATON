@@ -8,30 +8,82 @@ using System.Xml;
 using RestSharp;
 using RestSharp.Authenticators;
 using HtmlAgilityPack;
+using System.Text.RegularExpressions;
 
 namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
+        private Timer countdownTimer;
+        private int countdownTime;
+        private string msg;
         public Form1()
         {
             InitializeComponent();
+
+            countdownTimer = new Timer();
+            countdownTimer.Interval = 1000;
+            countdownTimer.Tick += CountdownTimer_Tick;
+            maskedTextBox2.Visible = false;
         }
 
         private async void button1_Click(object sender, EventArgs e)
         {
             var ip = "192.168.8.1"; // IP 
-            var phone = "+79113172105"; // Номер телефона
-            var msg = "Я не знаю"; // Сообщение 
+            var phone = maskedTextBox1.Text.Trim().Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "");
+
+            var msg = GenerateCode();
 
             var result = await SendSMSAsync(ip, phone, msg);
+
             if (result)
             {
-                MessageBox.Show("СМС усшепно отпралена!");
+                MessageBox.Show("Сообщение успешно отправлено");
+                maskedTextBox1.Visible = false;
+                maskedTextBox2.Visible = true;
+                button1.Enabled = false;
+                countdownTime = 60;
+                countdownTimer.Start();
             }
             else
             {
                 MessageBox.Show("Ошибка при отправлении.");
+            }
+        }
+
+        private string GenerateCode()
+        {
+            Random random = new Random();
+
+            var randomNumber = random.Next(1000, 10000);
+
+            return randomNumber.ToString();
+        }
+
+        private bool Mask()
+        {
+            return maskedTextBox2.MaskFull && maskedTextBox2.Text.Trim().Replace(" ", "") == msg;
+        }
+
+        private void CountdownTimer_Tick(object sender, EventArgs e)
+        {
+            countdownTime--;
+
+            button1.Text = $"Пожалуйста, подождите... {countdownTime}s";
+
+            if (countdownTime <= 0)
+            {
+                countdownTimer.Stop();
+                button1.Enabled = true;
+                button1.Text = "Отправить SMS";
+            }
+            // Проверка maskedTextBox2
+            if (Mask())
+            {
+                countdownTimer.Stop();
+                MessageBox.Show("Добро пожаловать!");
+                button1.Enabled = true;
+                button1.Text = "Получить код по SMS";
             }
         }
 
@@ -119,6 +171,26 @@ namespace WindowsFormsApp1
             }
 
             return false;
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            //throw new System.NotImplementedException();
+        }
+
+        private void maskedTextBox1_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        {
+
+        }
+
+        private void maskedTextBox2_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        {
+
         }
     }
 }
